@@ -1,6 +1,8 @@
 const path = require('path');
 const express = require('express');
 const hbs = require('hbs')
+const geocode = require('./utils/geocode')
+const forecast = require('./utils/forecast')
 
 const app = express();
 
@@ -37,6 +39,48 @@ app.get('/help', (req, res) => {
     name: 'Michael Gacetta',
     message: 'Help me find a good picture!'
   });
+})
+
+// Goal wire up /weather
+// 1. require geocode/forecast into app.js X
+// 2. use the address to geocode
+// 3. use the coordinates to get forecast
+// 4. send back the real forecast and location
+
+app.get('/weather', (req, res) => {
+  const address = req.query.address;
+  if (!address) {
+    return res.send({
+      error: 'You must provide an address'
+    })
+  }
+
+  geocode(address, (error, { latitude, longitude, location} = {}) => {
+    if (error) {
+      return res.send({
+        error
+      })
+    }
+  
+    forecast(latitude, longitude, (error, forecastData) => {
+      if (error) {
+        return res.send({
+          error
+        })
+      }
+      res.send({
+        forecast: forecastData,
+        location,
+        address
+      })
+    })
+  })
+
+  // res.send({
+  //   forecast: 'Pretty shitty',
+  //   location: 'Olympia',
+  //   address
+  // })
 })
 
 app.get('/help/*', (req, res) => {
