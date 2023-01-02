@@ -12,7 +12,7 @@ const publicDir = path.resolve(__dirname, '../public')
 const viewsPath = path.resolve(__dirname, '../templates/views')
 const partialsPath = path.resolve(__dirname, '../templates/partials')
 
-// Setup handlebars engine and views location
+// Setup handlebars engine, views and partials locations
 app.set('view engine', 'hbs')
 app.set('views', viewsPath)
 hbs.registerPartials(partialsPath)
@@ -20,6 +20,7 @@ hbs.registerPartials(partialsPath)
 // Setup static directory to serve
 app.use(express.static(publicDir))
 
+//route handlers
 app.get('', (req, res) => {
   res.render('index', {
     title: 'Weather App',
@@ -41,12 +42,6 @@ app.get('/help', (req, res) => {
     message: 'Help me find a good picture!'
   });
 })
-
-// Goal wire up /weather
-// 1. require geocode/forecast into app.js X
-// 2. use the address to geocode
-// 3. use the coordinates to get forecast
-// 4. send back the real forecast and location
 
 app.get('/weather', (req, res) => {
   const address = req.query.address;
@@ -76,12 +71,6 @@ app.get('/weather', (req, res) => {
       })
     })
   })
-
-  // res.send({
-  //   forecast: 'Pretty shitty',
-  //   location: 'Olympia',
-  //   address
-  // })
 })
 
 app.get('/help/*', (req, res) => {
@@ -103,6 +92,3 @@ app.get('*', (req, res) => {
 app.listen(port, () => {
   console.log(`Server is up on port ${port}`)
 })
-
-
-

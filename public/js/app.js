@@ -26,9 +26,6 @@ weatherForm.addEventListener('submit', (e) => {
   })
 })
 
-
-
-
 // Goal: use input val to get weather 
 // 1. migrate fetch call into the submit callback X
 // 2. use the search text as the address query srting value X
